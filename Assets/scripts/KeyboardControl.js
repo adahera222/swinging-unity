@@ -10,7 +10,9 @@ var timeBetweenFlaps : float = 1;
 var jumpBoostScalar : float = 1;
 var grabbingDrag : float = 1;
 
+
 private var touchingTrigger : Collider;
+private var joint : Joint;
 
 
 function Start () 
@@ -21,15 +23,16 @@ function Start ()
 
 function FixedUpdate () 
 {
-	if(hingeJoint) HandlePoleControl();
-	else if(fixedJoint) HandleChainControl();
+	if(joint instanceof HingeJoint) HandlePoleControl();
+	else if(joint instanceof FixedJoint) HandleChainControl();
 	else HandleFlyingControl();
 			
 	if(Input.GetKey("space"))
 	{
-		if(!touchingTrigger) return;
-		 
-		if(!hingeJoint && touchingTrigger.tag == "pole")
+		// attempt to create new attachment to _touchingTrigger_
+		if(joint || !touchingTrigger) return;
+		
+		if(touchingTrigger.tag == "pole")
 		{
 			var currentPosition = transform.position;
 			var otherPosition = touchingTrigger.GetComponent(Transform).position;
@@ -44,26 +47,21 @@ function FixedUpdate ()
 			// hinge should coincide with the center of _other_ 
 			var hingeLocalPosition = transform.InverseTransformPoint(otherPosition);
 			
-			gameObject.AddComponent("HingeJoint");
-			hingeJoint.axis = Vector3.back;
-			hingeJoint.anchor = hingeLocalPosition;
+			joint = gameObject.AddComponent("HingeJoint");
+			joint.axis = Vector3.back;
+			joint.anchor = hingeLocalPosition;
 		}
-		else if(!fixedJoint && touchingTrigger.tag == "chain")
+		else if(touchingTrigger.tag == "rope")
 		{
-			gameObject.AddComponent("FixedJoint");
-			fixedJoint.connectedBody = touchingTrigger;
-			fixedJoint.anchor = new Vector3(0, 0, 0);
+			joint = gameObject.AddComponent("FixedJoint");
+			joint.connectedBody = touchingTrigger.rigidbody;
+			joint.anchor = new Vector3(0, 0, 0);
 		}
 	}
-	else if(hingeJoint)
+	else if(joint)
 	{
-		Destroy(hingeJoint);
-		
-		rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
-	}
-	else if(fixedJoint)
-	{
-		Destroy(fixedJoint);
+		// destroy joint and add jump boost 
+		Destroy(joint);
 		
 		rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
 	}
