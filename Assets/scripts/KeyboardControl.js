@@ -21,12 +21,15 @@ function Start ()
 
 function FixedUpdate () 
 {
-	if(hingeJoint) HandleSwingControl();
+	if(hingeJoint) HandlePoleControl();
+	else if(fixedJoint) HandleChainControl();
 	else HandleFlyingControl();
 			
 	if(Input.GetKey("space"))
 	{
-		if(!hingeJoint && touchingTrigger)
+		if(!touchingTrigger) return;
+		 
+		if(!hingeJoint && touchingTrigger.tag == "pole")
 		{
 			var currentPosition = transform.position;
 			var otherPosition = touchingTrigger.GetComponent(Transform).position;
@@ -45,6 +48,12 @@ function FixedUpdate ()
 			hingeJoint.axis = Vector3.back;
 			hingeJoint.anchor = hingeLocalPosition;
 		}
+		else if(!fixedJoint && touchingTrigger.tag == "chain")
+		{
+			gameObject.AddComponent("FixedJoint");
+			fixedJoint.connectedBody = touchingTrigger;
+			fixedJoint.anchor = new Vector3(0, 0, 0);
+		}
 	}
 	else if(hingeJoint)
 	{
@@ -52,7 +61,12 @@ function FixedUpdate ()
 		
 		rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
 	}
-
+	else if(fixedJoint)
+	{
+		Destroy(fixedJoint);
+		
+		rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
+	}
 }
 
 
@@ -68,7 +82,7 @@ function OnTriggerExit (other : Collider)
 }
 
 
-function HandleSwingControl()
+function HandlePoleControl()
 {
 	rigidbody.drag = 0;
 
@@ -80,6 +94,21 @@ function HandleSwingControl()
 		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
 	else if(Input.GetKey("down"))
 		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration);
+}
+
+
+function HandleChainControl()
+{
+	rigidbody.drag = 0;
+
+	if(Input.GetKey("left"))
+		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
+	else if(Input.GetKey("right"))
+		rigidbody.AddForce(Vector3.right * swingForceScalar, ForceMode.Acceleration);
+	/*else if(Input.GetKey("up"))
+		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
+	else if(Input.GetKey("down"))
+		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration);*/
 }
 
 
