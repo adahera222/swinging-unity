@@ -54,16 +54,20 @@ function FixedUpdate ()
 		}
 		else if(touchingTrigger.tag == "rope")
 		{
-			// TODO: move to center of touchingTrigger, then adjust target position to closest projected point
-			transform.position = touchingTrigger.transform.position;
-			transform.rotation = touchingTrigger.transform.rotation;
+			// adjust our position to lie on the Y-axis of the rope
+			var newLocalPosition : Vector3 = touchingTrigger.transform.InverseTransformPoint(transform.position);
+			newLocalPosition.x = 0;
+			newLocalPosition.z = 0;
 			
+			transform.position = touchingTrigger.transform.TransformPoint(newLocalPosition);
+			transform.rotation = touchingTrigger.transform.rotation;
+						
 			var configurableJoint : ConfigurableJoint = gameObject.AddComponent("ConfigurableJoint") as ConfigurableJoint;
 			configurableJoint.connectedBody = touchingTrigger.rigidbody;
-			configurableJoint.anchor = new Vector3(0, 0, 0);
+			configurableJoint.anchor = newLocalPosition;
 			configurableJoint.xMotion = ConfigurableJointMotion.Locked;
 			configurableJoint.yMotion = ConfigurableJointMotion.Limited;
-			configurableJoint.linearLimit.limit = 3; // TODO: replace with joint length
+			configurableJoint.linearLimit.limit = 4; // TODO: replace with joint length
 			configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
 			configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
 			configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
@@ -125,9 +129,13 @@ function HandleChainControl()
 	// TODO: detect when move needed to next segment of chain
 	var configurableJoint : ConfigurableJoint = joint as ConfigurableJoint;
 	if(Input.GetKey("up"))
+	{
 		configurableJoint.targetPosition.y -= climbingMovement;
+	}
 	if(Input.GetKey("down"))
+	{
 		configurableJoint.targetPosition.y += climbingMovement;
+	}
 }
 
 
