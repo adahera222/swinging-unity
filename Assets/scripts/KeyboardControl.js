@@ -9,6 +9,7 @@ var sideFlyingScalar : float = 2;
 var timeBetweenFlaps : float = 1;
 var jumpBoostScalar : float = 1;
 var grabbingDrag : float = 1;
+var climbingMovement : float = 0.1;
 
 
 private var touchingTrigger : Collider;
@@ -24,7 +25,7 @@ function Start ()
 function FixedUpdate () 
 {
 	if(joint instanceof HingeJoint) HandlePoleControl();
-	else if(joint instanceof FixedJoint) HandleChainControl();
+	else if(joint instanceof ConfigurableJoint) HandleChainControl();
 	else HandleFlyingControl();
 			
 	if(Input.GetKey("space"))
@@ -53,9 +54,24 @@ function FixedUpdate ()
 		}
 		else if(touchingTrigger.tag == "rope")
 		{
-			joint = gameObject.AddComponent("FixedJoint");
-			joint.connectedBody = touchingTrigger.rigidbody;
-			joint.anchor = new Vector3(0, 0, 0);
+			// TODO: move to center of touchingTrigger, then adjust target position to closest projected point
+			transform.position = touchingTrigger.transform.position;
+			transform.rotation = touchingTrigger.transform.rotation;
+			
+			var configurableJoint : ConfigurableJoint = gameObject.AddComponent("ConfigurableJoint") as ConfigurableJoint;
+			configurableJoint.connectedBody = touchingTrigger.rigidbody;
+			configurableJoint.anchor = new Vector3(0, 0, 0);
+			configurableJoint.xMotion = ConfigurableJointMotion.Locked;
+			configurableJoint.yMotion = ConfigurableJointMotion.Limited;
+			configurableJoint.linearLimit.limit = 3; // TODO: replace with joint length
+			configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
+			configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
+			configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
+			configurableJoint.yDrive.mode = JointDriveMode.PositionAndVelocity;
+			configurableJoint.yDrive.positionSpring = 20; // TODO: best value?
+			configurableJoint.yDrive.positionDamper = 20; // TODO: best value?
+			
+			joint = configurableJoint;
 		}
 	}
 	else if(joint)
@@ -82,31 +98,36 @@ function OnTriggerExit (other : Collider)
 
 function HandlePoleControl()
 {
+	// drag may be leftover from flying control
 	rigidbody.drag = 0;
 
 	if(Input.GetKey("left"))
 		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
-	else if(Input.GetKey("right"))
+	if(Input.GetKey("right"))
 		rigidbody.AddForce(Vector3.right * swingForceScalar, ForceMode.Acceleration);
-	else if(Input.GetKey("up"))
+	if(Input.GetKey("up"))
 		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
-	else if(Input.GetKey("down"))
+	if(Input.GetKey("down"))
 		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration);
 }
 
 
 function HandleChainControl()
 {
+	// drag may be leftover from flying control
 	rigidbody.drag = 0;
 
 	if(Input.GetKey("left"))
 		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
-	else if(Input.GetKey("right"))
+	if(Input.GetKey("right"))
 		rigidbody.AddForce(Vector3.right * swingForceScalar, ForceMode.Acceleration);
-	/*else if(Input.GetKey("up"))
-		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
-	else if(Input.GetKey("down"))
-		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration);*/
+	
+	// TODO: detect when move needed to next segment of chain
+	var configurableJoint : ConfigurableJoint = joint as ConfigurableJoint;
+	if(Input.GetKey("up"))
+		configurableJoint.targetPosition.y -= climbingMovement;
+	if(Input.GetKey("down"))
+		configurableJoint.targetPosition.y += climbingMovement;
 }
 
 
