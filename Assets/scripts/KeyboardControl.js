@@ -99,7 +99,7 @@ function CreateJoint(touchingTrigger : Collider) : void
 		configurableJoint.targetPosition = -targetLocalPos;
 		configurableJoint.xMotion = ConfigurableJointMotion.Locked;
 		configurableJoint.yMotion = ConfigurableJointMotion.Limited;
-		configurableJoint.linearLimit.limit = 4; // TODO: replace with joint length
+		configurableJoint.linearLimit.limit = 2; // TODO: replace with joint length
 		configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
 		configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
 		configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
