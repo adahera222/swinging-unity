@@ -4,25 +4,26 @@ var touchingTrigger : Collider;
 var grabbingDrag : float = 1;
 var flyingScalar : float = 2;
 var flyingRotationVelocity : float = 5;
+var flyingDecay : float = 0.1;
+var minFlyingVelocity : float = 1;
 
+private var flyingVelocity : float;
 
 function Start () 
 {
 	rigidbody.freezeRotation = true;
 	
-	// turn to face direction of movement
 	var jumpingDirection : Vector3 = rigidbody.velocity.normalized;
 	var angle : float = Mathf.Atan2(jumpingDirection.x, jumpingDirection.y);
 	rigidbody.rotation.SetEulerRotation(0, 0, Mathf.Rad2Deg * -angle);
 	
-	/*var velocity : Vector3 = rigidbody.velocity.normalized;
-	velocity.z = 0;
-	
-	rigidbody.rotation = Quaternion.LookRotation(velocity);*/
+	//print("angle is " + Mathf.Rad2Deg * angle + ", vector is "+ jumpingDirection.x + ", " + jumpingDirection.y);	
+
+	flyingVelocity = rigidbody.velocity.magnitude;
 }
 
 
-function Update () 
+function FixedUpdate () 
 {
 	if(Input.GetKey("space")) rigidbody.drag = grabbingDrag;
 	else rigidbody.drag = 0;
@@ -30,14 +31,25 @@ function Update ()
 	var currentEuleurRotation : Vector3 = rigidbody.rotation.eulerAngles;
 
 	var targetRotation : Vector3 = currentEuleurRotation;
-	if(Input.GetKey("left")) targetRotation = Vector3(0, 0, 180);
-	if(Input.GetKey("right")) targetRotation = Vector3(0, 0, 0);
-	if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 90);
-	if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 270);
+	if(Input.GetKey("left")) 
+	{
+		if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 135);
+		else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 225);
+		else targetRotation = Vector3(0, 0, 180);
+	}
+	else if(Input.GetKey("right"))
+	{
+		if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 45);
+		else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 315);	
+		else targetRotation = Vector3(0, 0, 0);
+	}
+	else if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 90);
+	else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 270);
 
 	rigidbody.rotation = Quaternion.RotateTowards(rigidbody.rotation, Quaternion.Euler(targetRotation), flyingRotationVelocity);
 	
-	rigidbody.AddRelativeForce(new Vector3(flyingScalar, 0, 0), ForceMode.Acceleration);
+	flyingVelocity = Mathf.Max(flyingVelocity - flyingDecay, minFlyingVelocity);
+	rigidbody.AddRelativeForce(new Vector3(flyingVelocity, 0, 0), ForceMode.Acceleration);
 }
 
 

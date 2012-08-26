@@ -31,7 +31,7 @@ function Start ()
 }
 
 
-function Update () 
+function FixedUpdate () 
 {
 	if(Input.GetKey("left"))
 		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
