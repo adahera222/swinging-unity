@@ -9,6 +9,8 @@ var grabbingDrag : float = 1;
 var climbingMovement : float = 0.1;
 var ropeSegmentLength : float = 4;
 var flyingRotationVelocity : float = 0.1;
+var flyingDecay : float = 0.1;
+var minFlyingVelocity : float = 1;
 
 
 private var touchingTriggers : Array = []; // of Collider
@@ -83,6 +85,8 @@ function StartFlyingControl() : void
 	flyingControl.grabbingDrag = grabbingDrag;
 	flyingControl.flyingScalar = flyingScalar;
 	flyingControl.flyingRotationVelocity = flyingRotationVelocity;
-	
+	flyingControl.flyingDecay = flyingDecay;
+	flyingControl.minFlyingVelocity = minFlyingVelocity;
+
 	SetMovementController(flyingControl);
 }

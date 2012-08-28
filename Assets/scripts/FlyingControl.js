@@ -14,8 +14,8 @@ function Start ()
 	rigidbody.freezeRotation = true;
 	
 	var jumpingDirection : Vector3 = rigidbody.velocity.normalized;
-	var angle : float = Mathf.Atan2(jumpingDirection.x, jumpingDirection.y);
-	rigidbody.rotation.SetEulerRotation(0, 0, Mathf.Rad2Deg * -angle);
+	var angle : float = Mathf.Atan2(jumpingDirection.y, jumpingDirection.x);
+	rigidbody.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * angle);
 	
 	//print("angle is " + Mathf.Rad2Deg * angle + ", vector is "+ jumpingDirection.x + ", " + jumpingDirection.y);	
 
@@ -29,7 +29,7 @@ function FixedUpdate ()
 	else rigidbody.drag = 0;
 	
 	var currentEuleurRotation : Vector3 = rigidbody.rotation.eulerAngles;
-
+	
 	var targetRotation : Vector3 = currentEuleurRotation;
 	if(Input.GetKey("left")) 
 	{

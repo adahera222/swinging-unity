@@ -5,6 +5,7 @@ var swingForceScalar : float = 10;
 var jumpBoostScalar : float = 5;
 var ropeSegmentLength : float = 4;
 var climbingMovement : float = 0.1;
+var segmentLength : float = 2;
 
 private var joint : ConfigurableJoint;
 private var touchingTriggers : Array = []; // of Collider
@@ -34,7 +35,7 @@ function CreateJoint() : void
 	joint.targetPosition = -targetLocalPos;
 	joint.xMotion = ConfigurableJointMotion.Locked;
 	joint.yMotion = ConfigurableJointMotion.Limited;
-	joint.linearLimit.limit = 2; // TODO: replace with joint length
+	joint.linearLimit.limit = segmentLength / 2; 
 	joint.angularXMotion = ConfigurableJointMotion.Locked;
 	joint.angularYMotion = ConfigurableJointMotion.Locked;
 	joint.angularZMotion = ConfigurableJointMotion.Locked;
@@ -57,7 +58,7 @@ function FixedUpdate ()
 	if(Input.GetKey("up"))
 	{
 		joint.targetPosition.y -= climbingMovement;
-		if(joint.targetPosition.y < -joint.linearLimit.limit / 2) 
+		if(joint.targetPosition.y <= -segmentLength / 2) 
 		{
 			var otherChain : Collider = Utility.FindWhere(touchingTriggers, function(i_collider : Collider)
 			{
@@ -74,14 +75,14 @@ function FixedUpdate ()
 			else
 			{				
 				// keep us in bounds
-				joint.targetPosition.y = -joint.linearLimit.limit / 2;
+				joint.targetPosition.y = -segmentLength/2;
 			}
 		}
 	}
 	if(Input.GetKey("down"))
 	{
 		joint.targetPosition.y += climbingMovement;
-		if(joint.targetPosition.y > joint.linearLimit.limit / 2) 
+		if(joint.targetPosition.y >= segmentLength / 2) 
 		{
 			otherChain = Utility.FindWhere(touchingTriggers, function(i_collider : Collider)
 			{
@@ -91,12 +92,14 @@ function FixedUpdate ()
 			if(otherChain) 
 			{
 				Destroy(joint);
+
 				ropeSegment = otherChain;
+				CreateJoint();
 			}
 			else
 			{				
 				// keep us in bounds
-				joint.targetPosition.y = joint.linearLimit.limit / 2;
+				joint.targetPosition.y = segmentLength / 2;
 			}
 		}
 	}
