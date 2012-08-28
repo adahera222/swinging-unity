@@ -2,7 +2,7 @@
 
 
 var pole : Collider;
-var swingDistance : float = 0.5;
+var swingDistance : float = 1;
 var swingForceScalar : float = 10;
 var jumpBoostScalar : float = 5;
 
@@ -17,9 +17,11 @@ function Start ()
 	
 	// _this_ should be at _swingDistance_ of _touchingTrigger_
 	// we assume that swingDistance < currentDistance
-	if(swingDistance > Vector3.Distance(currentPosition, otherPosition)) Debug.LogError("swingDistance > currentDistance"); 
+	//if(swingDistance > Vector3.Distance(currentPosition, otherPosition)) Debug.LogError("swingDistance > currentDistance"); 
 	
-	var targetPosition = currentPosition + (swingDistance / Vector3.Distance(currentPosition, otherPosition)) * (currentPosition - otherPosition);
+	//var targetPosition = currentPosition + (swingDistance / Vector3.Distance(currentPosition, otherPosition)) * (currentPosition - otherPosition);
+	var targetPosition : Vector3 = otherPosition + (currentPosition - otherPosition).normalized * swingDistance;
+	//var targetPosition = currentPosition + (swingDistance / Vector3.Distance(currentPosition, otherPosition)) * (currentPosition - otherPosition);
 	transform.position = targetPosition;
 	
 	// hinge should coincide with the center of _other_ 

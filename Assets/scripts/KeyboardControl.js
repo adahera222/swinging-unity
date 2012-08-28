@@ -2,7 +2,7 @@
 
 
 var swingForceScalar : float = 10;
-var swingDistance : float = 0.5;
+var swingDistance : float = 1;
 var flyingScalar : float = 2;
 var jumpBoostScalar : float = 5;
 var grabbingDrag : float = 1;
