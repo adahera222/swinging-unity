@@ -14,15 +14,14 @@ function Start ()
 {
 	var currentPosition = transform.position;
 	var otherPosition = pole.GetComponent(Transform).position;
-	
-	// _this_ should be at _swingDistance_ of _touchingTrigger_
-	// we assume that swingDistance < currentDistance
-	//if(swingDistance > Vector3.Distance(currentPosition, otherPosition)) Debug.LogError("swingDistance > currentDistance"); 
-	
-	//var targetPosition = currentPosition + (swingDistance / Vector3.Distance(currentPosition, otherPosition)) * (currentPosition - otherPosition);
+
+	// put ourselves at swingDistance from the pole, in the current direction	
 	var targetPosition : Vector3 = otherPosition + (currentPosition - otherPosition).normalized * swingDistance;
-	//var targetPosition = currentPosition + (swingDistance / Vector3.Distance(currentPosition, otherPosition)) * (currentPosition - otherPosition);
 	transform.position = targetPosition;
+	
+	// point at the pole
+	var directionToTarget : Vector3 = otherPosition - targetPosition;
+	transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg);
 	
 	// hinge should coincide with the center of _other_ 
 	var hingeLocalPosition = transform.InverseTransformPoint(otherPosition);
