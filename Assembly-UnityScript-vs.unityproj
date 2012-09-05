@@ -56,9 +56,11 @@
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\SmoothFollow2D.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\ZoomCamera.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\tapcontrol.js" />
+     <Compile Include="Assets\scripts\BeeFlying.js" />
      <Compile Include="Assets\scripts\ChangeMaterialWhenAttached.js" />
      <Compile Include="Assets\scripts\FlyingControl.js" />
      <Compile Include="Assets\scripts\KeyboardControl.js" />
+     <Compile Include="Assets\scripts\MathFx.js" />
      <Compile Include="Assets\scripts\PoleControl.js" />
      <Compile Include="Assets\scripts\RestartLevel.js" />
      <Compile Include="Assets\scripts\RopeControl.js" />
