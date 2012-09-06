@@ -58,12 +58,14 @@
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\tapcontrol.js" />
      <Compile Include="Assets\scripts\BeeFlying.js" />
      <Compile Include="Assets\scripts\ChangeMaterialWhenAttached.js" />
+     <Compile Include="Assets\scripts\CloudMovement.js" />
      <Compile Include="Assets\scripts\FlyingControl.js" />
      <Compile Include="Assets\scripts\KeyboardControl.js" />
      <Compile Include="Assets\scripts\MathFx.js" />
      <Compile Include="Assets\scripts\PoleControl.js" />
      <Compile Include="Assets\scripts\RestartLevel.js" />
      <Compile Include="Assets\scripts\RopeControl.js" />
+     <Compile Include="Assets\scripts\SnakeBehavior.js" />
      <Compile Include="Assets\scripts\Utility.js" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
