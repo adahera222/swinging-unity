@@ -25,6 +25,8 @@ function Start ()
 
 function FixedUpdate () 
 {
+	if(Time.timeScale == 0) return;
+
 	if(Input.GetKey("space"))
 	{
 		var touchingTrigger : Collider = touchingTriggers.length > 0 ? touchingTriggers[0] : null;		
@@ -61,12 +63,16 @@ function FixedUpdate ()
 
 function OnTriggerEnter (other : Collider) 
 {
+	if(other.tag != "pole" && other.tag != "rope") return; 
+	
 	Utility.AddToSet(touchingTriggers, other);
 }
 
 
 function OnTriggerExit (other : Collider) 
 {
+	if(other.tag != "pole" && other.tag != "rope") return; 
+
 	Utility.RemoveFromSet(touchingTriggers, other);
 }
 

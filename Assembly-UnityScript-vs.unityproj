@@ -62,6 +62,7 @@
      <Compile Include="Assets\scripts\FlyingControl.js" />
      <Compile Include="Assets\scripts\KeyboardControl.js" />
      <Compile Include="Assets\scripts\MathFx.js" />
+     <Compile Include="Assets\scripts\PlaySouvenir.js" />
      <Compile Include="Assets\scripts\PoleControl.js" />
      <Compile Include="Assets\scripts\RestartLevel.js" />
      <Compile Include="Assets\scripts\RopeControl.js" />
