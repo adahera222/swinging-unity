@@ -12,6 +12,7 @@ public class randomMaterial : MonoBehaviour {
 		newMaterial = (Material)Resources.Load("materials/leaves"+n, typeof(Material));
 		
 		GetComponent<MeshRenderer>().sharedMaterial = newMaterial;
+		
 	}
 	
 	// Update is called once per frame
