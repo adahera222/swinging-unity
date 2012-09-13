@@ -30,7 +30,7 @@ function FixedUpdate ()
 	
 	var currentEuleurRotation : Vector3 = rigidbody.rotation.eulerAngles;
 	
-	var targetRotation : Vector3 = currentEuleurRotation;
+	/*var targetRotation : Vector3 = currentEuleurRotation;
 	if(Input.GetKey("left")) 
 	{
 		if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 135);
@@ -44,7 +44,13 @@ function FixedUpdate ()
 		else targetRotation = Vector3(0, 0, 0);
 	}
 	else if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 90);
-	else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 270);
+	else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 270);*/
+	
+	var targetRotation : Vector3 = currentEuleurRotation;
+	if(Mathf.Abs(Input.GetAxis("Mouse X")) > 0.1 || Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.1)
+	{
+		targetRotation = Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")));
+	} 
 
 	rigidbody.rotation = Quaternion.RotateTowards(rigidbody.rotation, Quaternion.Euler(targetRotation), flyingRotationVelocity);
 	

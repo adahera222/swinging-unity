@@ -34,14 +34,17 @@ function Start ()
 
 function FixedUpdate () 
 {
-	if(Input.GetKey("left"))
+/*	if(Input.GetKey("left"))
 		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
 	if(Input.GetKey("right"))
 		rigidbody.AddForce(Vector3.right * swingForceScalar, ForceMode.Acceleration);
 	if(Input.GetKey("up"))
 		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
 	if(Input.GetKey("down"))
-		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration);
+		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration); */
+
+	rigidbody.AddForce(Vector3.right * swingForceScalar * Input.GetAxis("Mouse X"), ForceMode.Acceleration);
+	rigidbody.AddForce(Vector3.up * swingForceScalar * Input.GetAxis("Mouse Y"), ForceMode.Acceleration);
 }
 
 

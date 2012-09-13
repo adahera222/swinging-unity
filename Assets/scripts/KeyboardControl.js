@@ -27,7 +27,7 @@ function FixedUpdate ()
 {
 	if(Time.timeScale == 0) return;
 
-	if(Input.GetKey("space"))
+	if(Input.GetMouseButton(0) || Input.GetKey("space"))
 	{
 		var touchingTrigger : Collider = touchingTriggers.length > 0 ? touchingTriggers[0] : null;		
 		if(!(movementController instanceof FlyingControl) || !touchingTrigger) return;
