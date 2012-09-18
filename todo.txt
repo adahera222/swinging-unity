@@ -1,0 +1,11 @@
+TODO
+
+- camera 
+  - it stays fixed when attached to branch
+  - backs up when hero attaches to branch
+- cord
+  - single hinge joint to center
+  - several points below to make it look realistic
+- control
+  - clockwise-counterclockwise movement
+  - fly to clicked point (just once)

@@ -1,3 +1,4 @@
+Assembly-*
 Library/*
 Temp/*
 *.pidb
@@ -5,3 +6,4 @@ Temp/*
 *.sln
 *.booproj
 *.csproj
+webplayer/*.unity3d
