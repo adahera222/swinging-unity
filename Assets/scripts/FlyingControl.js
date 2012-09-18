@@ -1,13 +1,11 @@
 #pragma strict
 
-var touchingTrigger : Collider;
-var grabbingDrag : float = 1;
 var flyingScalar : float = 2;
-var flyingRotationVelocity : float = 5;
-var flyingDecay : float = 0.1;
-var minFlyingVelocity : float = 1;
+var flyingDrag : float = 0.1;
+var flyingTime : float = 3;
 
-private var flyingVelocity : float;
+private var pickedFlyToTime : int = 0;
+
 
 function Start () 
 {
@@ -18,50 +16,44 @@ function Start ()
 	rigidbody.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * angle);
 	
 	//print("angle is " + Mathf.Rad2Deg * angle + ", vector is "+ jumpingDirection.x + ", " + jumpingDirection.y);	
-
-	flyingVelocity = rigidbody.velocity.magnitude;
 }
 
 
 function FixedUpdate () 
 {
-	if(Input.GetKey("space")) rigidbody.drag = grabbingDrag;
-	else rigidbody.drag = 0;
-	
-	var currentEuleurRotation : Vector3 = rigidbody.rotation.eulerAngles;
-	
-	/*var targetRotation : Vector3 = currentEuleurRotation;
-	if(Input.GetKey("left")) 
+	if(pickedFlyToTime > 0)
 	{
-		if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 135);
-		else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 225);
-		else targetRotation = Vector3(0, 0, 180);
+		if(Time.time - pickedFlyToTime > flyingTime)
+		{
+			rigidbody.useGravity = true;
+		}
 	}
-	else if(Input.GetKey("right"))
-	{
-		if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 45);
-		else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 315);	
-		else targetRotation = Vector3(0, 0, 0);
+	else
+	{  	
+		if(Input.GetMouseButtonDown(0))
+		{
+			var screenPoint : Vector3 = Input.mousePosition;
+			screenPoint.z = Mathf.Abs(Camera.main.transform.position.z);
+			var worldPoint : Vector3 = Camera.main.ScreenToWorldPoint(screenPoint);
+			
+			Instantiate(Resources.Load("flyToParticles"), worldPoint, Quaternion.identity);
+			
+			var direction : Vector3 = (worldPoint - rigidbody.position).normalized;
+			rigidbody.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+			
+			rigidbody.useGravity = false;
+			rigidbody.drag = flyingDrag;
+			rigidbody.velocity = direction * flyingScalar;
+			
+			pickedFlyToTime = Time.time;
+		}
 	}
-	else if(Input.GetKey("up")) targetRotation = Vector3(0, 0, 90);
-	else if(Input.GetKey("down")) targetRotation = Vector3(0, 0, 270);*/
-	
-	var targetRotation : Vector3 = currentEuleurRotation;
-	if(Mathf.Abs(Input.GetAxis("Mouse X")) > 0.1 || Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.1)
-	{
-		targetRotation = Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")));
-	} 
-
-	rigidbody.rotation = Quaternion.RotateTowards(rigidbody.rotation, Quaternion.Euler(targetRotation), flyingRotationVelocity);
-	
-	flyingVelocity = Mathf.Max(flyingVelocity - flyingDecay, minFlyingVelocity);
-	rigidbody.AddRelativeForce(new Vector3(flyingVelocity, 0, 0), ForceMode.Acceleration);
 }
+
 
 
 function OnDestroy() 
 {
-	rigidbody.drag = 0;
-
+	rigidbody.useGravity = true;
 	rigidbody.freezeRotation = false;
 }

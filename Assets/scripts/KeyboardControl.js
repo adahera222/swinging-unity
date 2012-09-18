@@ -4,12 +4,11 @@
 var swingForceScalar : float = 10;
 var swingDistance : float = 1;
 var flyingScalar : float = 2;
+var flyingDrag : float = 0.1;
+var flyingTime : float = 3;
 var jumpBoostScalar : float = 5;
-var grabbingDrag : float = 1;
 var climbingMovement : float = 0.1;
 var ropeSegmentLength : float = 4;
-var flyingRotationVelocity : float = 0.1;
-var flyingDecay : float = 0.1;
 var minFlyingVelocity : float = 1;
 
 
@@ -88,11 +87,9 @@ function SetMovementController(script : Component) : void
 function StartFlyingControl() : void
 {
 	var flyingControl : FlyingControl = gameObject.AddComponent("FlyingControl");
-	flyingControl.grabbingDrag = grabbingDrag;
 	flyingControl.flyingScalar = flyingScalar;
-	flyingControl.flyingRotationVelocity = flyingRotationVelocity;
-	flyingControl.flyingDecay = flyingDecay;
-	flyingControl.minFlyingVelocity = minFlyingVelocity;
+	flyingControl.flyingTime = flyingTime;
+	flyingControl.flyingDrag = flyingDrag;
 
 	SetMovementController(flyingControl);
 }
