@@ -2,7 +2,7 @@
 
 var flyingScalar : float = 2;
 var flyingDrag : float = 0.1;
-var flyingTime : float = 3;
+var flyingTime : float = 1;
 
 private var pickedFlyToTime : int = 0;
 

@@ -1,15 +1,15 @@
 #pragma strict
 
 
-var swingForceScalar : float = 10;
 var swingDistance : float = 1;
+var swingMaxForce : float = 10;
+var swingVelocity : float = 50;
 var flyingScalar : float = 2;
 var flyingDrag : float = 0.1;
 var flyingTime : float = 3;
 var jumpBoostScalar : float = 5;
 var climbingMovement : float = 0.1;
 var ropeSegmentLength : float = 4;
-var minFlyingVelocity : float = 1;
 
 
 private var touchingTriggers : Array = []; // of Collider
@@ -36,8 +36,8 @@ function FixedUpdate ()
 			var poleControl : PoleControl = gameObject.AddComponent("PoleControl");
 			poleControl.pole = touchingTrigger;
 			poleControl.swingDistance = swingDistance;
-			poleControl.swingForceScalar = swingForceScalar;
-			poleControl.jumpBoostScalar = jumpBoostScalar;
+			poleControl.swingMaxForce = swingMaxForce;
+			poleControl.swingVelocity = swingVelocity;
 			
 			SetMovementController(poleControl);
 		}
@@ -45,7 +45,6 @@ function FixedUpdate ()
 		{
 			var ropeControl : RopeControl = gameObject.AddComponent("RopeControl");
 			ropeControl.ropeSegment = touchingTrigger;
-			ropeControl.swingForceScalar = swingForceScalar;
 			ropeControl.jumpBoostScalar = jumpBoostScalar;
 			ropeControl.ropeSegmentLength = ropeSegmentLength;
 			ropeControl.climbingMovement = climbingMovement;

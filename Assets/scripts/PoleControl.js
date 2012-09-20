@@ -3,12 +3,15 @@
 
 var pole : Collider;
 var swingDistance : float = 1;
-var swingForceScalar : float = 10;
+var swingMaxForce : float = 10;
+var swingVelocity : float = 50;
 var jumpBoostScalar : float = 5;
-
+var consideredMousePoints : int = 10;
+var minimumSum : float = 200;
+var maximumLength : float = 500;
 
 private var joint : HingeJoint;
-
+private var lastMousePoints : Array = []; // of Vector2
 
 function Start () 
 {
@@ -34,17 +37,48 @@ function Start ()
 
 function FixedUpdate () 
 {
-/*	if(Input.GetKey("left"))
-		rigidbody.AddForce(Vector3.left * swingForceScalar, ForceMode.Acceleration);
-	if(Input.GetKey("right"))
-		rigidbody.AddForce(Vector3.right * swingForceScalar, ForceMode.Acceleration);
-	if(Input.GetKey("up"))
-		rigidbody.AddForce(Vector3.up * swingForceScalar, ForceMode.Acceleration);
-	if(Input.GetKey("down"))
-		rigidbody.AddForce(Vector3.down * swingForceScalar, ForceMode.Acceleration); */
+	var currentMousePoint : Vector3 = Input.mousePosition;
 
-	rigidbody.AddForce(Vector3.right * swingForceScalar * Input.GetAxis("Mouse X"), ForceMode.Acceleration);
-	rigidbody.AddForce(Vector3.up * swingForceScalar * Input.GetAxis("Mouse Y"), ForceMode.Acceleration);
+	lastMousePoints.Push(Input.mousePosition);
+	if(lastMousePoints.length < consideredMousePoints) return;
+	if(lastMousePoints.length > consideredMousePoints) lastMousePoints.shift();
+	
+	// Sum over the edges, (x2-x1)(y2+y1). If the result is positive the curve is clockwise, if it's negative the curve is counter-clockwise.
+	// from http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
+	
+	var crossProductSum : float = 0;
+	var lengthSum : float = 0; 
+	for(var i : int = 0; i < lastMousePoints.length; i++)
+	{
+		// TODO: use proper casting to avoid these temp variables. But what's the syntax?
+		var pointA : Vector3 = lastMousePoints[i];
+		var pointB : Vector3 = lastMousePoints[(i+1) % lastMousePoints.length];
+
+		crossProductSum += (pointB.x - pointA.x) * (pointB.y + pointA.y);
+		lengthSum += Vector3.Distance(pointA, pointB);
+	}
+	
+	//Debug.Log("cross " + crossProductSum + ", length " + lengthSum);
+
+	if(Mathf.Abs(crossProductSum) < minimumSum)
+	{
+		//Debug.Log("inconsistent");
+		joint.useMotor = false;
+		return;
+	}
+	else if(crossProductSum > 0) 
+	{
+		joint.motor.targetVelocity = swingVelocity * Mathf.Min(lengthSum, maximumLength) / maximumLength;
+		//Debug.Log("cw - velocity " + joint.motor.targetVelocity);
+	}
+	else
+	{
+		joint.motor.targetVelocity = -swingVelocity * Mathf.Min(lengthSum, maximumLength) / maximumLength;
+		//Debug.Log("ccw - velocity " + joint.motor.targetVelocity);
+	}		
+		
+	joint.useMotor = true;
+	joint.motor.force = swingMaxForce;
 }
 
 

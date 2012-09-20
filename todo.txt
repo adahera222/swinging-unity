@@ -9,3 +9,6 @@ TODO
 - control
   - clockwise-counterclockwise movement
   - fly to clicked point (just once)
+
+- branches
+  - take off collisions?
