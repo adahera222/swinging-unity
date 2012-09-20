@@ -6,9 +6,6 @@ TODO
 - cord
   - single hinge joint to center
   - several points below to make it look realistic
-- control
-  - clockwise-counterclockwise movement
-  - fly to clicked point (just once)
 
 - branches
-  - take off collisions?
+  - remove possibility of collisions?

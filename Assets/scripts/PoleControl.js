@@ -87,5 +87,6 @@ function OnDestroy()
 	// destroy joint and add jump boost 
 	Destroy(joint);
 	
-	rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
+	if(rigidbody.velocity.magnitude > 1)
+		rigidbody.AddForce(rigidbody.velocity.normalized * jumpBoostScalar, ForceMode.VelocityChange);
 }

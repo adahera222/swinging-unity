@@ -7,6 +7,7 @@ var swingVelocity : float = 50;
 var flyingScalar : float = 2;
 var flyingDrag : float = 0.1;
 var flyingTime : float = 3;
+var timeBetweenBoosts : float = 4;
 var jumpBoostScalar : float = 5;
 var climbingMovement : float = 0.1;
 var ropeSegmentLength : float = 4;
@@ -89,6 +90,7 @@ function StartFlyingControl() : void
 	flyingControl.flyingScalar = flyingScalar;
 	flyingControl.flyingTime = flyingTime;
 	flyingControl.flyingDrag = flyingDrag;
+	flyingControl.timeBetweenBoosts = timeBetweenBoosts;
 
 	SetMovementController(flyingControl);
 }
